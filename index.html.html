@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Dewi 🎂💖</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            rose: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              200: '#fecdd3',
+              300: '#fda4af',
+              400: '#fb7185',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              800: '#9f1239',
+              900: '#881337',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; }
+
+    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+    .floating-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatUp linear forwards;
+      opacity: 0;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-110vh) rotate(360deg) scale(1.2); opacity: 0; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { text-shadow: 0 0 20px rgba(244,63,94,0.3), 0 0 40px rgba(244,63,94,0.1); }
+      50% { text-shadow: 0 0 40px rgba(244,63,94,0.6), 0 0 80px rgba(244,63,94,0.3); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes cake-bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    @keyframes borderGlow {
+      0%, 100% { border-color: rgba(244,63,94,0.3); box-shadow: 0 0 20px rgba(244,63,94,0.1); }
+      50% { border-color: rgba(244,63,94,0.7); box-shadow: 0 0 40px rgba(244,63,94,0.3); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes candleFlicker {
+      0%, 100% { transform: scaleY(1) scaleX(1); opacity: 1; }
+      25% { transform: scaleY(1.1) scaleX(0.9); opacity: 0.9; }
+      50% { transform: scaleY(0.95) scaleX(1.05); opacity: 1; }
+      75% { transform: scaleY(1.05) scaleX(0.95); opacity: 0.95; }
+    }
+
+    .animate-fade-in-up { animation: fadeInUp 1s ease-out forwards; }
+    .animate-fade-in-scale { animation: fadeInScale 0.8s ease-out forwards; }
+    .animate-slide-left { animation: slideInLeft 0.8s ease-out forwards; }
+    .animate-slide-right { animation: slideInRight 0.8s ease-out forwards; }
+    .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .animate-cake { animation: cake-bounce 2s ease-in-out infinite; }
+    .animate-border-glow { animation: borderGlow 3s ease-in-out infinite; }
+
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+    .delay-600 { animation-delay: 0.6s; }
+    .delay-700 { animation-delay: 0.7s; }
+    .delay-800 { animation-delay: 0.8s; }
+    .delay-1000 { animation-delay: 1s; }
+    .delay-1200 { animation-delay: 1.2s; }
+    .delay-1500 { animation-delay: 1.5s; }
+    .delay-2000 { animation-delay: 2s; }
+
+    .opacity-0-init { opacity: 0; }
+
+    .photo-card {
+      overflow: hidden;
+      border-radius: 1rem;
+      position: relative;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .photo-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 25px 50px -12px rgba(244, 63, 94, 0.3);
+    }
+    .photo-card img {
+      transition: transform 0.7s ease-out;
+    }
+    .photo-card:hover img {
+      transform: scale(1.08);
+    }
+    .photo-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .photo-card:hover::after {
+      opacity: 1;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .shimmer-text {
+      background: linear-gradient(90deg, #fda4af, #f43f5e, #fda4af, #f43f5e);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+
+    .wish-card {
+      background: linear-gradient(135deg, rgba(244,63,94,0.05), rgba(244,63,94,0.1));
+      border: 1px solid rgba(244,63,94,0.2);
+      backdrop-filter: blur(12px);
+    }
+
+    .age-display {
+      font-size: 8rem;
+      font-weight: 700;
+      line-height: 1;
+      background: linear-gradient(135deg, #fda4af, #f43f5e, #be123c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 30px rgba(244,63,94,0.3));
+    }
+
+    @media (max-width: 768px) {
+      .age-display { font-size: 5rem; }
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 1rem;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    .candle-flame {
+      display: inline-block;
+      animation: candleFlicker 0.5s ease-in-out infinite;
+      font-size: 2rem;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #fda4af;
+      border-radius: 50%;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #f43f5e; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+  <div id="hearts-container"></div>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-10">
+      <i data-lucide="x" class="w-8 h-8"></i>
+    </button>
+    <img id="lightbox-img" src="" alt="Photo">
+  </div>
+
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-xl border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-rose-400 text-xl">💖</span>
+        <span class="font-serif text-lg font-semibold text-white">Dewi's Birthday</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#home" class="text-sm text-slate-300 hover:text-rose-400 transition-colors">Home</a>
+        <a href="#gallery" class="text-sm text-slate-300 hover:text-rose-400 transition-colors">Gallery</a>
+        <a href="#wishes" class="text-sm text-slate-300 hover:text-rose-400 transition-colors">Wishes</a>
+        <a href="#message" class="text-sm text-slate-300 hover:text-rose-400 transition-colors">Message</a>
+      </div>
+      <div class="candle-flame">🕯️</div>
+    </div>
+  </nav>
+
+  <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="https://z-cdn-media.chatglm.cn/files/5c51abbf-8eec-44ad-8fbf-f39cff312221.jpeg?auth_key=1878365689-d086854401154afcab4048626601aaab-0-5b56e892d145402d47d4e51dffa297b4" 
+           alt="Background" class="w-full h-full object-cover opacity-30" />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0a0a0a]"></div>
+    </div>
+
+    <div class="sparkle" style="top: 20%; left: 15%; animation-delay: 0s;"></div>
+    <div class="sparkle" style="top: 30%; right: 20%; animation-delay: 0.5s;"></div>
+    <div class="sparkle" style="top: 60%; left: 10%; animation-delay: 1s;"></div>
+    <div class="sparkle" style="top: 50%; right: 15%; animation-delay: 1.5s;"></div>
+    <div class="sparkle" style="top: 70%; left: 25%; animation-delay: 2s;"></div>
+    <div class="sparkle" style="top: 15%; right: 30%; animation-delay: 0.8s;"></div>
+    <div class="sparkle" style="top: 80%; right: 35%; animation-delay: 1.2s;"></div>
+
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto pt-16">
+      <div class="opacity-0-init animate-fade-in-up animate-cake mb-6">
+        <span class="text-6xl md:text-7xl">🎂</span>
+      </div>
+
+      <div class="opacity-0-init animate-fade-in-up delay-200 mb-6">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-medium uppercase tracking-widest">
+          <span class="w-1.5 h-1.5 bg-rose-400 rounded-full animate-pulse"></span>
+          25 Mei 2008
+        </span>
+      </div>
+
+      <h1 class="opacity-0-init animate-fade-in-up delay-300">
+        <span class="block font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white animate-pulse-glow mb-2">
+          Selamat Ulang Tahun
+        </span>
+        <span class="block shimmer-text font-serif text-5xl md:text-7xl lg:text-8xl font-bold mt-4">
+          DEWI MUDIATUL QOSIDAH
+        </span>
+      </h1>
+
+      <div class="opacity-0-init animate-fade-in-scale delay-500 my-8">
+        <div class="age-display">18</div>
+        <p class="text-rose-300/70 text-sm uppercase tracking-widest mt-2">years of being awesome</p>
+      </div>
+
+      <p class="opacity-0-init animate-fade-in-up delay-700 text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        Hari ini jadi hari spesial karena perempuan hebat yang lahir di tahun 2008 akhirnya bertambah usia 🎉❤️
+      </p>
+
+      <div class="opacity-0-init animate-fade-in-up delay-1000 mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#wishes" class="inline-flex items-center gap-2 px-8 py-3.5 bg-rose-600 hover:bg-rose-700 text-white rounded-full font-medium text-sm transition-all shadow-lg shadow-rose-600/30 hover:shadow-rose-600/50">
+          <i data-lucide="heart" class="w-4 h-4"></i>
+          Baca Ucapan
+        </a>
+        <a href="#gallery" class="inline-flex items-center gap-2 px-8 py-3.5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full font-medium text-sm transition-all">
+          <i data-lucide="image" class="w-4 h-4"></i>
+          Lihat Galeri
+        </a>
+      </div>
+
+      <div class="opacity-0-init animate-fade-in-up delay-2000 mt-16 animate-float">
+        <i data-lucide="chevrons-down" class="w-6 h-6 text-rose-400/50 mx-auto"></i>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" class="relative py-24 md:py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-medium uppercase tracking-widest mb-4">
+          <i data-lucide="camera" class="w-3 h-3"></i>
+          Momen Bahagia
+        </span>
+        <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mt-4">Galeri Kenangan Kita 💕</h2>
+        <p class="text-slate-400 text-lg mt-4 max-w-xl mx-auto">Setiap foto menyimpan cerita, setiap momen adalah kenangan yang berharga</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div class="photo-card md:col-span-2 reveal group cursor-pointer" onclick="openLightbox('https://z-cdn-media.chatglm.cn/files/5c51abbf-8eec-44ad-8fbf-f39cff312221.jpeg?auth_key=1878365689-d086854401154afcab4048626601aaab-0-5b56e892d145402d47d4e51dffa297b4')">
+          <div class="relative aspect-[21/9] overflow-hidden rounded-2xl border border-white/10 animate-border-glow">
+            <img src="https://z-cdn-media.chatglm.cn/files/5c51abbf-8eec-44ad-8fbf-f39cff312221.jpeg?auth_key=1878365689-d086854401154afcab4048626601aaab-0-5b56e892d145402d47d4e51dffa297b4" 
+                 alt="Our Love Photo 1" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6 right-6">
+              <div class="flex items-center gap-2 text-rose-300 text-sm font-medium">
+                <i data-lucide="heart" class="w-4 h-4"></i>
+                OUR BOX — Momen Foto Bersama 🐰
+              </div>
+              <p class="text-white/70 text-xs mt-1">Dengan kelinci pink dan decor merah yang seru!</p>
+            </div>
+            <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                <i data-lucide="maximize-2" class="w-4 h-4 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card reveal group cursor-pointer" onclick="openLightbox('https://z-cdn-media.chatglm.cn/files/edd01a49-a518-4ac7-8b15-303e000c7f35.jpeg?auth_key=1878365689-b48ed9acfba24deaa237ce2ac39430ce-0-1e7919b6a394a4c4a5b3ecbfdb9eed06')">
+          <div class="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
+            <img src="https://z-cdn-media.chatglm.cn/files/edd01a49-a518-4ac7-8b15-303e000c7f35.jpeg?auth_key=1878365689-b48ed9acfba24deaa237ce2ac39430ce-0-1e7919b6a394a4c4a5b3ecbfdb9eed06" 
+                 alt="Dewi Outdoor" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6">
+              <div class="flex items-center gap-2 text-rose-300 text-sm font-medium">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                Street Style ✨
+              </div>
+              <p class="text-white/70 text-xs mt-1">Waktu jalan-jalan santai</p>
+            </div>
+            <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                <i data-lucide="maximize-2" class="w-4 h-4 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card reveal group cursor-pointer" onclick="openLightbox('https://z-cdn-media.chatglm.cn/files/e8f23d82-453b-4d15-8868-80a5b33dc738.jpeg?auth_key=1878365689-04dcf6024f314fd6bed92bd0ef3666e7-0-0cba2669fbaca265807969f04a020149')">
+          <div class="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
+            <img src="https://z-cdn-media.chatglm.cn/files/e8f23d82-453b-4d15-8868-80a5b33dc738.jpeg?auth_key=1878365689-04dcf6024f314fd6bed92bd0ef3666e7-0-0cba2669fbaca265807969f04a020149" 
+                 alt="Together at Park" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6">
+              <div class="flex items-center gap-2 text-rose-300 text-sm font-medium">
+                <i data-lucide="trees" class="w-4 h-4"></i>
+                Adventure Day 🦕
+              </div>
+              <p class="text-white/70 text-xs mt-1">Selfie bareng di taman dino</p>
+            </div>
+            <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                <i data-lucide="maximize-2" class="w-4 h-4 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-card md:col-span-2 reveal group cursor-pointer" onclick="openLightbox('https://z-cdn-media.chatglm.cn/files/30055008-c74b-444d-a8d1-e8eeec01a3e9.jpeg?auth_key=1878365689-5e182cc15f30420fb66525cbff2f4d22-0-45e1ace45e706eed31837c5fa003bc5a')">
+          <div class="relative aspect-[21/9] overflow-hidden rounded-2xl border border-white/10 animate-border-glow">
+            <img src="https://z-cdn-media.chatglm.cn/files/30055008-c74b-444d-a8d1-e8eeec01a3e9.jpeg?auth_key=1878365689-5e182cc15f30420fb66525cbff2f4d22-0-45e1ace45e706eed31837c5fa003bc5a" 
+                 alt="Mirror Selfie" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6 right-6">
+              <div class="flex items-center gap-2 text-rose-300 text-sm font-medium">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                Mirror Selfie — Corridor Vibes 🪞
+              </div>
+              <p class="text-white/70 text-xs mt-1">Momen santai yang selalu bikin senyum</p>
+            </div>
+            <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                <i data-lucide="maximize-2" class="w-4 h-4 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="wishes" class="relative py-24 md:py-32">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-rose-950/5 to-transparent"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-medium uppercase tracking-widest mb-4">
+          <i data-lucide="gift" class="w-3 h-3"></i>
+          Doa & Harapan
+        </span>
+        <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mt-4">Ucapan Untukmu 💌</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="wish-card rounded-2xl p-8 reveal transition-all hover:border-rose-500/40 hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-xl bg-rose-500/10 flex items-center justify-center mb-6">
+            <span class="text-2xl">🏥</span>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-3">Kesehatan</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Semoga di umur baru ini kamu selalu diberi kesehatan yang prima, tubuh yang kuat, dan jiwa yang tenang.</p>
+        </div>
+
+        <div class="wish-card rounded-2xl p-8 reveal transition-all hover:border-rose-500/40 hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-xl bg-rose-500/10 flex items-center justify-center mb-6">
+            <span class="text-2xl">😊</span>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-3">Kebahagiaan</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Semoga senyummu selalu ada, harimu dipenuhi hal-hal baik, dan kebahagiaan selalu menghampirimu setiap hari.</p>
+        </div>
+
+        <div class="wish-card rounded-2xl p-8 reveal transition-all hover:border-rose-500/40 hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-xl bg-rose-500/10 flex items-center justify-center mb-6">
+            <span class="text-2xl">💰</span>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-3">Rezeki Lancar</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Semoga rezeki mengalir deras seperti air, tidak pernah kering, dan selalu cukup untuk semua kebutuhanmu.</p>
+        </div>
+
+        <div class="wish-card rounded-2xl p-8 reveal transition-all hover:border-rose-500/40 hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-xl bg-rose-500/10 flex items-center justify-center mb-6">
+            <span class="text-2xl">🌟</span>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-3">Impian Terwujud</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Semoga semua impianmu bisa tercapai satu per satu. Setiap langkahmu membawamu lebih dekat ke cita-citamu.</p>
+        </div>
+
+        <div class="wish-card rounded-2xl p-8 reveal transition-all hover:border-rose-500/40 hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-xl bg-rose-500/10 flex items-center justify-center mb-6">
+            <span class="text-2xl">🤝</span>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-3">Saling Menemani</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Semoga kita bisa terus saling menemani dalam suka maupun duka. Aku selalu ada untukmu, sayang.</p>
+        </div>
+
+        <div class="wish-card rounded-2xl p-8 reveal transition-all hover:border-rose-500/40 hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-xl bg-rose-500/10 flex items-center justify-center mb-6">
+            <span class="text-2xl">💖</span>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-3">Cinta Abadi</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Terima kasih sudah hadir dan jadi bagian indah dalam hidupku. Kamu adalah hadiah terbaik dalam hidupku.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="message" class="relative py-24 md:py-32 overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-gradient-to-br from-rose-950/20 via-transparent to-rose-950/10"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative max-w-4xl mx-auto px-6">
+      <div class="text-center reveal">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-medium uppercase tracking-widest mb-4">
+          <i data-lucide="pen-tool" class="w-3 h-3"></i>
+          Surat Cinta
+        </span>
+        <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mt-4 mb-4">Untuk Dewi Tersayang 💕</h2>
+      </div>
+
+      <div class="reveal mt-12 bg-gradient-to-br from-neutral-900/80 to-neutral-950/90 border border-rose-500/20 rounded-3xl p-8 md:p-12 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+        <div class="absolute top-4 left-4 text-rose-400/20 text-4xl">💕</div>
+        <div class="absolute bottom-4 right-4 text-rose-400/20 text-4xl">💕</div>
+
+        <div class="space-y-6 text-slate-300 leading-relaxed text-base md:text-lg">
+          <p class="font-serif text-xl md:text-2xl text-rose-200 italic">
+            "Selamat ulang tahun, sayangku DEWI MUDIATUL QOSIDAH 🎉❤️"
+          </p>
+
+          <p>
+            Hari ini, 25 Mei, jadi hari spesial karena perempuan hebat yang lahir di tahun 2008 akhirnya bertambah usia. Semoga di umur baru ini kamu selalu diberi kesehatan, kebahagiaan, rezeki yang lancar, dan semua impianmu bisa tercapai satu per satu.
+          </p>
+
+          <p>
+            Terima kasih sudah hadir dan jadi bagian indah dalam hidupku. Semoga senyummu selalu ada, harimu dipenuhi hal-hal baik, dan kita bisa terus saling menemani dalam suka maupun duka.
+          </p>
+
+          <p class="text-rose-300 font-medium text-lg md:text-xl">
+            Tetap jadi DEWI yang aku kenal: baik, kuat, lucu, dan selalu bikin hati nyaman. Aku bangga punya kamu 💖
+          </p>
+
+          <div class="pt-6 border-t border-rose-500/10">
+            <p class="font-serif text-2xl md:text-3xl text-rose-400 font-bold animate-pulse-glow">
+              Happy Birthday, cintaku 🎂✨
+            </p>
+          </div>
+
+          <div class="flex items-center gap-4 pt-4">
+            <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+              <i data-lucide="heart" class="w-6 h-6 text-rose-400"></i>
+            </div>
+            <div>
+              <p class="text-white font-medium">Dengan segenap cinta</p>
+              <p class="text-rose-400 text-sm">Selamanya 💕</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 md:py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16 reveal">
+        <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mt-4">Alasan Aku Bangga Punya Kamu 🥰</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="reveal text-center group">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-rose-500/10 to-rose-500/5 border border-rose-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+            <span class="text-4xl md:text-5xl">😇</span>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Baik</h3>
+          <p class="text-slate-500 text-xs mt-1">Hatimu selemah sutra</p>
+        </div>
+
+        <div class="reveal text-center group">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-rose-500/10 to-rose-500/5 border border-rose-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+            <span class="text-4xl md:text-5xl">💪</span>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Kuat</h3>
+          <p class="text-slate-500 text-xs mt-1">Tabah menghadapi segala</p>
+        </div>
+
+        <div class="reveal text-center group">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-rose-500/10 to-rose-500/5 border border-rose-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+            <span class="text-4xl md:text-5xl">🤭</span>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Lucu</h3>
+          <p class="text-slate-500 text-xs mt-1">Bikin senyum melulu</p>
+        </div>
+
+        <div class="reveal text-center group">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-rose-500/10 to-rose-500/5 border border-rose-500/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+            <span class="text-4xl md:text-5xl">🫶</span>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Nyaman</h3>
+          <p class="text-slate-500 text-xs mt-1">Selalu bikin hati tenang</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 md:py-32">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-rose-950/5 to-transparent"></div>
+    <div class="relative max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12 reveal">
+        <h2 class="font-serif text-3xl md:text-5xl font-bold text-white">Fakta Menyenangkan 🎉</h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
+        <div class="text-center p-6 rounded-2xl bg-neutral-900/50 border border-white/5">
+          <div class="text-3xl md:text-4xl font-bold text-rose-400" id="years-count">18</div>
+          <div class="text-slate-500 text-sm mt-1">Tahun</div>
+        </div>
+        <div class="text-center p-6 rounded-2xl bg-neutral-900/50 border border-white/5">
+          <div class="text-3xl md:text-4xl font-bold text-rose-400" id="months-count">216</div>
+          <div class="text-slate-500 text-sm mt-1">Bulan</div>
+        </div>
+        <div class="text-center p-6 rounded-2xl bg-neutral-900/50 border border-white/5">
+          <div class="text-3xl md:text-4xl font-bold text-rose-400" id="days-count">6,575</div>
+          <div class="text-slate-500 text-sm mt-1">Hari</div>
+        </div>
+        <div class="text-center p-6 rounded-2xl bg-neutral-900/50 border border-white/5">
+          <div class="text-3xl md:text-4xl font-bold text-rose-400">∞</div>
+          <div class="text-slate-500 text-sm mt-1">Cinta Untukmu</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-24 md:py-40 overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-gradient-to-t from-rose-950/20 via-transparent to-transparent"></div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-rose-500/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative text-center px-6 max-w-3xl mx-auto">
+      <div class="reveal">
+        <div class="text-7xl md:text-8xl mb-8 animate-float">🎂</div>
+        <h2 class="font-serif text-4xl md:text-6xl font-bold text-white mb-6 animate-pulse-glow">
+          Happy 18th Birthday!
+        </h2>
+        <p class="text-xl md:text-2xl text-rose-300 font-serif italic mb-8">
+          DEWI MUDIATUL QOSIDAH
+        </p>
+        <p class="text-slate-400 text-lg leading-relaxed mb-10">
+          Semoga tahun ini menjadi tahun terbaik dalam hidupmu. 
+          Aku selalu di sini, selalu mendukungmu, selalu mencintaimu 💖
+        </p>
+
+        <button id="blow-candle-btn" onclick="blowCandle()" 
+                class="inline-flex items-center gap-3 px-10 py-4 bg-rose-600 hover:bg-rose-700 text-white rounded-full font-medium text-lg transition-all shadow-lg shadow-rose-600/30 hover:shadow-rose-600/50 hover:scale-105 active:scale-95">
+          <span class="candle-flame">🕯️</span>
+          Tiup Lilin!
+        </button>
+
+        <div id="after-blow" class="hidden mt-10">
+          <div class="text-6xl mb-4">🎉🥳🎊</div>
+          <p class="text-2xl font-serif text-rose-300 font-bold">Selamat! Semoga permintaanmu terkabul! ✨</p>
+          <p class="text-slate-400 mt-2">Aku juga berdoa yang sama untukmu, sayang 💕</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t border-white/5 py-12">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <div class="text-2xl mb-4">💖</div>
+      <p class="font-serif text-lg text-white mb-2">Dibuat dengan sepenuh hati</p>
+      <p class="text-slate-500 text-sm">Untuk Dewi Mudiatul Qosidah — 25 Mei 2008</p>
+      <div class="flex items-center justify-center gap-2 mt-4 text-rose-400/50 text-xs">
+        <i data-lucide="heart" class="w-3 h-3"></i>
+        <span>Happy Birthday, Cintaku</span>
+        <i data-lucide="heart" class="w-3 h-3"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    const confettiColors = ['#f43f5e', '#fb7185', '#fda4af', '#fecdd3', '#ffe4e6', '#fff1f2', '#fbbf24', '#a78bfa', '#34d399', '#ffffff'];
+    let confettiPieces = [];
+
+    class Confetti {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height - canvas.height;
+        this.w = Math.random() * 10 + 5;
+        this.h = Math.random() * 6 + 3;
+        this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        this.vx = (Math.random() - 0.5) * 3;
+        this.vy = Math.random() * 3 + 2;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = (Math.random() - 0.5) * 10;
+        this.opacity = Math.random() * 0.5 + 0.5;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.rotation += this.rotationSpeed;
+        this.vy += 0.02;
+        this.vx *= 0.99;
+        if (this.y > canvas.height + 20) {
+          this.y = -20;
+          this.x = Math.random() * canvas.width;
+          this.vy = Math.random() * 3 + 2;
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < 80; i++) confettiPieces.push(new Confetti());
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confettiPieces.forEach(c => { c.update(); c.draw(); });
+      requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
+
+    function createHeart() {
+      const container = document.getElementById('hearts-container');
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.innerHTML = ['💖', '💕', '❤️', '💗', '💘', '✨', '🌟'][Math.floor(Math.random() * 7)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+      heart.style.animationDuration = (Math.random() * 8 + 6) + 's';
+      container.appendChild(heart);
+      setTimeout(() => heart.remove(), 14000);
+    }
+    setInterval(createHeart, 2000);
+
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), index * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+    revealElements.forEach(el => observer.observe(el));
+
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+    let candleBlown = false;
+    function blowCandle() {
+      if (candleBlown) return;
+      candleBlown = true;
+      const btn = document.getElementById('blow-candle-btn');
+      btn.style.transition = 'all 0.5s';
+      btn.style.transform = 'scale(0.95)';
+      btn.style.opacity = '0.5';
+      btn.style.pointerEvents = 'none';
+      for (let i = 0; i < 150; i++) confettiPieces.push(new Confetti());
+      setTimeout(() => {
+        const afterBlow = document.getElementById('after-blow');
+        afterBlow.classList.remove('hidden');
+        afterBlow.style.animation = 'fadeInUp 0.8s ease-out';
+      }, 800);
+    }
+
+    function calculateAge() {
+      const birthday = new Date(2008, 4, 25);
+      const now = new Date();
+      const years = now.getFullYear() - birthday.getFullYear();
+      const months = years * 12 + (now.getMonth() - birthday.getMonth());
+      const days = Math.floor((now - birthday) / (1000 * 60 * 60 * 24));
+      document.getElementById('years-count').textContent = years;
+      document.getElementById('months-count').textContent = months.toLocaleString();
+      document.getElementById('days-count').textContent = days.toLocaleString();
+    }
+    calculateAge();
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    for (let i = 0; i < 5; i++) setTimeout(createHeart, i * 400);
+  </script>
+</body>
+</html>
